@@ -129,14 +129,14 @@ route.get('/getuser', auth, async(req,res)=>{
 })
 route.post("/orders", async (req, res) => {
     try {
-        // console.log("body",req.body)
+        console.log("body",req.body)
         const instance = new Razorpay({
             key_id: "rzp_test_fvOAKuvkkgRaoU",
             key_secret: "dbY34WVDWmoEItESZTx3qWMV",
         });
 
         const options = {
-            amount: req.body.total * 100, // amount in smallest currency unit
+            amount: (req.body.total+(req.body.total*0.05) )* 100, // amount in smallest currency unit
             currency: "INR",
             receipt: "receipt_order_74394",
         };
