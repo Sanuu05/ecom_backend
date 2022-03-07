@@ -24,7 +24,10 @@ const normalSchema = mongoose.Schema({
             type:Object
         }
         
-    }]
+    }],
+    address:{
+        type:Array
+    }
 })
 
 const Normal = mongoose.model("Normal", normalSchema)

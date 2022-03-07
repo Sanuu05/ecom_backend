@@ -229,6 +229,22 @@ route.get('/orderitem',auth, async(req,res)=>{
         console.log(error)
     }
 })
+route.patch('/address', auth, async(req,res)=>{
+    try {
+        console.log(req.body)
+        const excart = await Normal.findOneAndUpdate({ _id: req.user }, {
+            $push: {
+                address:req.body
+            }
+        })
+        // const excart = await Normal.findById(req.user)
+        console.log(excart)
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+})
 
 
 

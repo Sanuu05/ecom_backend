@@ -6,7 +6,7 @@ const ProductSchema = mongoose.Schema({
         required:true
     },
     pimg:{
-        type:String,
+        type:Array,
         required:true
     },
     type:{
@@ -18,7 +18,21 @@ const ProductSchema = mongoose.Schema({
         type:Number,
         require:true
     },
+    highlight:{
+        type:Array,
+
+
+    },
+    alldetail:{
+        type:Array,
+        
+
+    },
     stock:{
+        type:Number,
+        require:true
+    },
+    discount:{
         type:Number,
         require:true
     },

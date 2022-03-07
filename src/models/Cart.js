@@ -9,7 +9,8 @@ const cartSchema = mongoose.Schema({
             pname:{type:String, required:true},
             stock:{type:String, required:true},
             price:{type: Number, required:true}, 
-            qyt:{type:Number, default:1 }
+            qyt:{type:Number, default:1 },
+            discount:{type:Number}
         }
 
     ]
