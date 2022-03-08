@@ -5,7 +5,7 @@ const cartSchema = mongoose.Schema({
     cart:[
         {
             cartitem:{ type: ObjectId , ref:"productdetail"},
-            pimg:{type:String, required:true},
+            pimg:{type:Array, required:true},
             pname:{type:String, required:true},
             stock:{type:String, required:true},
             price:{type: Number, required:true}, 

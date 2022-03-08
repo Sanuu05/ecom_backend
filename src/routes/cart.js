@@ -11,7 +11,7 @@ route.get("/",(req,res)=>{
 route.post('/post', auth, async (req, res) => {
     try {
         const { cart } = req.body
-        
+        // console.log('cc',cart)
         const user = await Normal.findById(req.user)
         const cartuser = await Cart.findOne({ by: req.user })
 
@@ -57,7 +57,7 @@ route.post('/post', auth, async (req, res) => {
 
 
     } catch (error) {
-        // console.log(error) 
+        console.log(error) 
     }
 })
 

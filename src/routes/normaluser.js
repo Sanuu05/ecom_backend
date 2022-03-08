@@ -129,18 +129,18 @@ route.get('/getuser', auth, async(req,res)=>{
 })
 route.post("/orders", async (req, res) => {
     try {
-        console.log("body",req.body)
+        console.log("body",req.body.total)
         const instance = new Razorpay({
             key_id: "rzp_test_fvOAKuvkkgRaoU",
             key_secret: "dbY34WVDWmoEItESZTx3qWMV",
         });
 
         const options = {
-            amount: (req.body.total+(req.body.total*0.05) )* 100, // amount in smallest currency unit
+            amount:Math.round(req.body.total *100), 
             currency: "INR",
             receipt: "receipt_order_74394",
         };
-
+console.log('cc',options)
         const order = await instance.orders.create(options);
 
         if (!order) return res.status(500).send("Some error occured");
@@ -149,6 +149,7 @@ route.post("/orders", async (req, res) => {
         
     } catch (error) {
         res.status(500).send(error);
+        console.log('errr1',error)
     }
 });
 route.post("/success",auth ,async (req, res) => {
@@ -161,8 +162,7 @@ route.post("/success",auth ,async (req, res) => {
             razorpayOrderId,
             razorpaySignature,
         } = req.body;
-        console.log(req.body.totaldata.totalcart
-            )
+        console.log(req.body.totaldata.totalcart)
 
         const shasum = crypto.createHmac("sha256", "dbY34WVDWmoEItESZTx3qWMV");
         shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
@@ -217,6 +217,7 @@ route.post("/success",auth ,async (req, res) => {
         });
     } catch (error) {
         res.status(500).send(error);
+        console.log('error')
     }
 });
 route.get('/orderitem',auth, async(req,res)=>{
