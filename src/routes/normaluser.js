@@ -15,7 +15,7 @@ route.get('/',()=>{
 })
 route.post('/signup', async (req, res) => {
     try {
-        const { name, email, password, cpassword, mobile } = req.body
+        const { name, email, mobile } = req.body
         if (!name) {
             return res.status(400).json({
                 msg: "enter name"
@@ -30,32 +30,17 @@ route.post('/signup', async (req, res) => {
                 msg: "enter mobile number"
             })
         }
-        if (!password) {
-            return res.status(400).json({
-                msg: "enter password"
-            })
-        }
-        if (!cpassword) {
-            return res.status(400).json({
-                msg: "enter confirm password"
-            })
-        }
+       
         const user = await Normal.findOne({ email })
         if (user) {
             return res.status(400).json({
                 msg: "user exists"
             })
         }
-        if (password !== cpassword) {
-            return res.status(400).json({
-                msg: "enter the same password"
-            })
-        }
-        const hashPassword = await bcrypt.hash(password, 10)
+      
         const userRes = new Normal({
             name,
             email,
-            password: hashPassword,
             mobile
 
         })
@@ -72,29 +57,20 @@ route.post('/signup', async (req, res) => {
 route.post('/login', async (req, res) => {
     try {
         // console.log(req.body)
-        const { email, password } = req.body
+        const { email } = req.body
         if (!email) {
             return res.status(400).json({
                 msg: "fill the email feild"
             })
         }
-        if (!password) {
-            return res.status(400).json({
-                msg: "fill the password feild"
-            })
-        }
+       
         const exuser = await Normal.findOne({ email })
         if (!exuser) {
             return res.status(400).json({
                 msg: "user does not exits"
             })
         }
-        const isMatch = await bcrypt.compare(password, exuser.password)
-        if (!isMatch) {
-            return res.status(400).json({
-                msg: "details doesnt match"
-            })
-        }
+
         const token = await jwt.sign({ id: exuser._id }, process.env.SEC_KEY)
         // console.log(token)
         exuser.password = undefined
