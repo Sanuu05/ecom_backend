@@ -10,7 +10,7 @@ const pusher = new Pusher({
     useTLS: true
   });
 
-mongoose.connect(" mongodb+srv://sanz:sannu05@cluster0.s5xci.mongodb.net/ecom?retryWrites=true&w=majority", {
+mongoose.connect(process.env.MONGODB, {
     useCreateIndex: true,
     useFindAndModify: false,
     useNewUrlParser: true,
