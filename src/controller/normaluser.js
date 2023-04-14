@@ -1,19 +1,13 @@
-const express = require("express")
-const route = express.Router()
 const Normal = require("../models/NormalUser")
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const auth = require('../middleware/auth')
 const Razorpay = require("razorpay");
 const crypto = require('crypto')
 const Order = require('../models/Order')
 const Productdetail = require('../models/productdetail')
 
-// signup 
-route.get('/',()=>{
-    res.json("hello normal")
-})
-route.post('/signup', async (req, res) => {
+// TODO : SignUp 
+
+exports.signUp = async (req, res) => {
     try {
         const { name, email, mobile } = req.body
         if (!name) {
@@ -30,14 +24,14 @@ route.post('/signup', async (req, res) => {
                 msg: "enter mobile number"
             })
         }
-       
+
         const user = await Normal.findOne({ email })
         if (user) {
             return res.status(400).json({
                 msg: "user exists"
             })
         }
-      
+
         const userRes = new Normal({
             name,
             email,
@@ -45,16 +39,15 @@ route.post('/signup', async (req, res) => {
 
         })
         const userSave = await userRes.save()
-        console.log(userSave)
         res.json("signup sucesfully")
     } catch (error) {
         console.log(error)
     }
-})
+}
 
-// login 
+//TODO: Login 
 
-route.post('/login', async (req, res) => {
+exports.Login = async (req, res) => {
     try {
         // console.log(req.body)
         const { email } = req.body
@@ -63,7 +56,7 @@ route.post('/login', async (req, res) => {
                 msg: "fill the email feild"
             })
         }
-       
+
         const exuser = await Normal.findOne({ email })
         if (!exuser) {
             return res.status(400).json({
@@ -84,10 +77,9 @@ route.post('/login', async (req, res) => {
         console.log(error)
     }
 
-})
-//getuser
-
-route.get('/getuser', auth, async(req,res)=>{
+}
+//TODO : Get User Data
+exports.getUser = async (req, res) => {
     try {
         const userRes = await Normal.findById(req.user)
         if (!userRes) {
@@ -96,39 +88,44 @@ route.get('/getuser', auth, async(req,res)=>{
             })
         }
         res.json({
-            user:userRes
+            user: userRes
         })
-        
+
     } catch (error) {
         console.log(error)
     }
-})
-route.post("/orders", async (req, res) => {
+}
+
+//TODO : Place Order
+
+exports.Orders = async (req, res) => {
     try {
-        console.log("body",req.body.total)
+        console.log("body", req.body.total)
         const instance = new Razorpay({
             key_id: "rzp_test_fvOAKuvkkgRaoU",
             key_secret: "dbY34WVDWmoEItESZTx3qWMV",
         });
 
         const options = {
-            amount:Math.round(req.body.total *100), 
+            amount: Math.round(req.body.total * 100),
             currency: "INR",
             receipt: "receipt_order_74394",
         };
-console.log('cc',options)
         const order = await instance.orders.create(options);
 
         if (!order) return res.status(500).send("Some error occured");
 
         res.json(order);
-        
+
     } catch (error) {
         res.status(500).send(error);
-        console.log('errr1',error)
+        console.log('errr1', error)
     }
-});
-route.post("/success",auth ,async (req, res) => {
+};
+
+//TODO : Order Successful 
+
+exports.Success = async (req, res) => {
     try {
         // getting the details back from our font-end
         console.log("sucess", req.body)
@@ -148,12 +145,12 @@ route.post("/success",auth ,async (req, res) => {
         // // comaparing our digest with the actual signature
         if (digest !== razorpaySignature)
             return res.status(400).json({ msg: "Transaction not legit!" });
-        
+
         const neworder = new Order({
-            customerDetail:req.body.totaldata.user,
-            customerOrder:req.body.totaldata.totalcart,
-            totolPrice:req.body.totaldata.total,
-            paymentstatus:true
+            customerDetail: req.body.totaldata.user,
+            customerOrder: req.body.totaldata.totalcart,
+            totolPrice: req.body.totaldata.total,
+            paymentstatus: true
         })
         const saveorder = await neworder.save()
         const buyuser = await Normal.findById(req.user)
@@ -172,22 +169,19 @@ route.post("/success",auth ,async (req, res) => {
                     buyer: buyer
                 }
             })
-            const buyitem={
+            const buyitem = {
                 data: val
             }
             const buyitems = await Normal.findByIdAndUpdate(req.user, {
                 $push: {
                     buyitem: buyitem
                 }
-            },{
-                new:true
+            }, {
+                new: true
             })
-            // console.log(buyitems)
-            // console.log(index,user)
-
         })
         res.json({
-            msg: "success", 
+            msg: "success",
             orderId: razorpayOrderId,
             paymentId: razorpayPaymentId,
         });
@@ -195,8 +189,11 @@ route.post("/success",auth ,async (req, res) => {
         res.status(500).send(error);
         console.log('error')
     }
-});
-route.get('/orderitem',auth, async(req,res)=>{
+};
+
+//TODO: Get Order Data 
+
+exports.orderItem = async (req, res) => {
     try {
         console.log(req.user)
         const data = await Normal.findById(req.user)
@@ -205,24 +202,24 @@ route.get('/orderitem',auth, async(req,res)=>{
     } catch (error) {
         console.log(error)
     }
-})
-route.patch('/address', auth, async(req,res)=>{
+}
+
+//TODO : Add/Edit Address Data
+
+exports.Address = async (req, res) => {
     try {
         console.log(req.body)
         const excart = await Normal.findOneAndUpdate({ _id: req.user }, {
             $push: {
-                address:req.body
+                address: req.body
             }
         })
-        // const excart = await Normal.findById(req.user)
         console.log(excart)
-        
+
     } catch (error) {
         console.log(error)
-        
+
     }
-})
+}
 
 
-
-module.exports = route

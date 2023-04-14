@@ -2,15 +2,17 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 port = process.env.PORT || 1988
-const db = require('./db/db')
-const pdt = require('./routes/product')
-const cors = require('cors')
-const normal = require('./routes/normaluser')
+const normal = require('./routes/user')
 const cart = require('./routes/cart')
+const product = require('./routes/product')
+const db = require('./db/db')
+
+const cors = require('cors')
+
 
 app.use(express.json())
 app.use(cors())
-app.use('/pdt', pdt)
+app.use('/pdt', product)
 app.use('/normal',normal)
 app.use('/cart',cart)
 app.get('/',(req,res)=>{
