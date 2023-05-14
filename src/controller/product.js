@@ -8,12 +8,12 @@ const Pincode = require('../models/Pincode')
 
 exports.postData= async(req,res)=>{
     try {
-        const {name,price,pimg, type, stock,detail,highlight,alldetail,discount} = req.body
-        if(!name && !price && !pimg && !type && !stock && !detail){
+        const {name,price,pimg, type, stock,detail,highlight,alldetail,discount,brand} = req.body
+        if(!name && !price && !pimg && !type && !stock && !detail && !brand){
             res.json("fill all the feilds")
         }
         else{
-            const data = new PdtDetail({name,price,pimg,type,stock,detail,"dealofday":false,"sale":false,alldetail,highlight,discount})
+            const data = new PdtDetail({name,price,pimg,type,stock,detail,"dealofday":false,"sale":false,alldetail,highlight,discount,brand})
             const savedata = await data.save()
             res.json(savedata)
         }
@@ -23,7 +23,7 @@ exports.postData= async(req,res)=>{
     }
 }
 
-//TODO : Post Product Data
+//TODO : Get Product Data
 
 exports.getData= async(req,res)=>{
     try {
@@ -46,6 +46,7 @@ exports.deleteById = async(req,res)=>{
 //TODO : Edit Product Data 
 
 exports.editProduct=async(req,res)=>{
+    console.log('ccc',req.body)
     try {
         const update = await PdtDetail.findByIdAndUpdate(req.params.id, req.body)
     } catch (error) {
@@ -61,10 +62,35 @@ exports.addCategory=async (req, res) => {
         if (excath) {
             return res.json("already exists")
         } else {
-            const data = new Category({ category })
+            const data = new Category({ "category":category })
             const savedata = await data.save()
             res.json(savedata)
         }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+//TODO : Update Category Data 
+exports.updateCategory=async (req, res) => {
+    try {
+        const {category,brand} = req.body
+        console.log(req.body)
+        if(category==''){
+            return res.status(400).json('choose category')
+        }
+        const excath = await Category.findOne({ "category": category })
+        console.log(excath)
+        if (excath) {
+            const categoryFind= await Category.findOneAndUpdate({"category": category},{
+                $addToSet:{
+                    'brand':brand
+                }
+            },{
+                new:true
+            })
+            console.log('done',categoryFind)
+        } 
 
     } catch (error) {
         console.log(error)
@@ -98,7 +124,7 @@ exports.deleteCategory= async (req, res) => {
 exports.postPincode=async (req, res) => {
     try {
         const {pincode,time} = req.body
-        console.log(req.body)
+        
         const excath = await Pincode.findOne({ "pincode": pincode })
         if (excath) {
             return res.json("already exists")

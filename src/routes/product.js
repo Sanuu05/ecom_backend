@@ -1,13 +1,14 @@
 const express = require('express')
 const route = express.Router()
 
-const {postData,getData,deleteById,editProduct,addCategory,deletePincode,getPincode,getCategory,postPincode,deleteCategory, dealOfDay, sale, removeDealOfDay, removeSale, topSale, removeTopSale, addOrder, deleteOrder, addCoupons, getCoupons} = require('../controller/product')
+const {postData,getData,deleteById,editProduct,addCategory,deletePincode,getPincode,getCategory,postPincode,deleteCategory, dealOfDay, sale, removeDealOfDay, removeSale, topSale, removeTopSale, addOrder, deleteOrder, addCoupons, getCoupons, updateCategory} = require('../controller/product')
 
 route.post('/post',postData)
 route.get('/get',getData)
 route.delete('/delete/:id',deleteById)
 route.patch('/edit/:id',editProduct)
 route.post('/category',addCategory)
+route.patch('/updatecategory',updateCategory)
 route.get('/category',getCategory)
 route.delete('/category/:id',deleteCategory)
 route.post('/pincode',postPincode)

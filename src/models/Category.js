@@ -2,8 +2,10 @@ const mongoose = require('mongoose')
 
 const categorySchema = mongoose.Schema({
     category:{
-        type:String,
-        required:true
+        type:String
+    },
+    brand:{
+        type:Array
     }
 })
 
