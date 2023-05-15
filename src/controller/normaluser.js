@@ -67,7 +67,7 @@ exports.Login = async (req, res) => {
         const token = await jwt.sign({ id: exuser._id }, process.env.SEC_KEY)
         // console.log(token)
         exuser.password = undefined
-        console.log(token)
+        // console.log(token)
         res.json({
             token,
             user: exuser
@@ -100,7 +100,7 @@ exports.getUser = async (req, res) => {
 
 exports.Orders = async (req, res) => {
     try {
-        console.log("body", req.body.total)
+        // console.log("body", req.body.total)
         const instance = new Razorpay({
             key_id: "rzp_test_fvOAKuvkkgRaoU",
             key_secret: "dbY34WVDWmoEItESZTx3qWMV",
@@ -119,7 +119,7 @@ exports.Orders = async (req, res) => {
 
     } catch (error) {
         res.status(500).send(error);
-        console.log('errr1', error)
+        // console.log('errr1', error)
     }
 };
 
@@ -128,14 +128,14 @@ exports.Orders = async (req, res) => {
 exports.Success = async (req, res) => {
     try {
         // getting the details back from our font-end
-        console.log("sucess", req.body)
+        // console.log("sucess", req.body)
         const {
             orderCreationId,
             razorpayPaymentId,
             razorpayOrderId,
             razorpaySignature,
         } = req.body;
-        console.log(req.body.totaldata.totalcart)
+        // console.log(req.body.totaldata.totalcart)
 
         const shasum = crypto.createHmac("sha256", "dbY34WVDWmoEItESZTx3qWMV");
         shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
@@ -187,7 +187,7 @@ exports.Success = async (req, res) => {
         });
     } catch (error) {
         res.status(500).send(error);
-        console.log('error')
+        // console.log('error')
     }
 };
 
@@ -195,12 +195,12 @@ exports.Success = async (req, res) => {
 
 exports.orderItem = async (req, res) => {
     try {
-        console.log(req.user)
+        // console.log(req.user)
         const data = await Normal.findById(req.user)
         res.json(data)
-        console.log(data)
+        // console.log(data)
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 
@@ -208,16 +208,16 @@ exports.orderItem = async (req, res) => {
 
 exports.Address = async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const excart = await Normal.findOneAndUpdate({ _id: req.user }, {
             $push: {
                 address: req.body
             }
         })
-        console.log(excart)
+        // console.log(excart)
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
 
     }
 }

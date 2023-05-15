@@ -17,8 +17,8 @@ mongoose.connect(process.env.MONGODB, {
     useUnifiedTopology: true
 }).then(() => {
     console.log("db connected")
-}).catch(() => {
-    console.log("db failed")
+}).catch((e) => {
+    console.log("db failed",e)
 })
 
 const db = mongoose.connection
@@ -27,7 +27,7 @@ db.once('open', () => {
     const msgCollection = db.collection('productdetails');
     const changeStream = msgCollection.watch()
     changeStream.on('change', (change)=>{
-        console.log(change)
+        // console.log(change)
         if(change.operationType==='insert'){
             const msgdetail = change.fullDocument;
             pusher.trigger('pdtinsert','insert',{
@@ -47,11 +47,11 @@ db.once('open', () => {
             })
         }
     })
-    console.log('db coonected again')
+    // console.log('db coonected again')
     const msgCollection1 = db.collection('categorys');
     const changeStream1 = msgCollection1.watch()
     changeStream1.on('change', (change)=>{
-        console.log(change)
+        // console.log(change)
         if(change.operationType==='insert'){
             const msgdetail = change.fullDocument;
             pusher.trigger('pdtinsert','insert',{

@@ -12,7 +12,7 @@ exports.postData = async (req, res) => {
 
         if (cartuser) {
             const product = req.body.cart.cartitem
-            console.log(product)
+            // console.log(product)
             const item = await cartuser.cart.find(c => c.cartitem == product)
             console.log("item", item)
             if (item) {
@@ -55,7 +55,7 @@ exports.postData = async (req, res) => {
 exports.getData = async (req, res) => {
     try {
         const get = await Cart.find({ by: req.user })
-        console.log("fget", get)
+        // console.log("fget", get)
         res.json(get)
     } catch (error) {
         console.log(error)
@@ -89,6 +89,7 @@ exports.deleteById = async (req, res) => {
 exports.deleteAfterOrder = async (req, res) => {
     try {
         // const {id} = req.params
+        console.log("after",req.user)
         const del = await Cart.findOneAndRemove({ "by": req.user })
         res.json(del)
         console.log("deleted")
