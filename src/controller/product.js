@@ -75,12 +75,12 @@ exports.addCategory=async (req, res) => {
 exports.updateCategory=async (req, res) => {
     try {
         const {category,brand} = req.body
-        console.log(req.body)
+       
         if(category==''){
             return res.status(400).json('choose category')
         }
         const excath = await Category.findOne({ "category": category })
-        console.log(excath)
+        
         if (excath) {
             const categoryFind= await Category.findOneAndUpdate({"category": category},{
                 $addToSet:{
@@ -89,7 +89,7 @@ exports.updateCategory=async (req, res) => {
             },{
                 new:true
             })
-            console.log('done',categoryFind)
+            res.json("Updated successfully")
         } 
 
     } catch (error) {
